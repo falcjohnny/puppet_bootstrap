@@ -23,6 +23,7 @@
 param(
    [string]$MsiUrl = "https://downloads.puppetlabs.com/windows/puppet-3.3.2.msi"
   ,[string]$PuppetVersion = $null
+  ,[string]$PuppetServerName = $null
 )
 
 if ($PuppetVersion -ne $null) {
@@ -64,4 +65,9 @@ if (!($PuppetInstalled)) {
   Stop-Service -Name puppet
 
   Write-Host "Puppet successfully installed."
+  
+  #Change server to puppet server name in puppet.conf
+  $AllArgs = @('config','set','--section','main','server',$PuppetServerName)
+  & 'C:\Program Files (x86)\Puppet Labs\Puppet\bin\puppet.bat' $AllArgs
+  Write-Host "Server name changed to $PuppetServerName in puppet.conf."
 }
